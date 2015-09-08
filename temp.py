@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 import os
-import pdb
+
+import gdal
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
 
 def readFile(path):
-	pdb.set_trace()
 	for root ,dirs,files in os.walk(path):
-		#只有显示二级目录
+		#只显示二级目录
 		if files ==[]:
 			continue
 		else:
@@ -19,8 +22,31 @@ def readFile(path):
 		
 
 
-readFile('temp')
-str = 'out/HDF4_EOS:EOS_GRID:"data/MCD12Q1/MCD12Q1.A2012001.h26v05.051.2014288202641.hdf":MOD12Q1:Land_Cover_Type_1'
-str = str.split('"')
-name = str[1][13:29]
-print name
+r = readFile('out')
+s= ''
+for i in r:
+	if 'Land_Cover_Type_1.tif' in i:
+		s = i
+		break
+ds = gdal.Open(s)
+ds1 = Image.open(s)
+
+A = np.array(ds.ReadAsArray())
+B = np.array(ds1)
+
+print A.dtype
+print B.dtype
+
+
+
+#~ fig = plt.figure(frameon = False)    #生成画布
+#~ ax = fig.add_subplot(111)             #增加子图
+#~ ax.imshow(A, interpolation='nearest', cmap=plt.cm.gist_earth)    #子图上显示数据
+#~ plt.savefig('./test1.JPEG',dpi = 80)
+#~ ax.set_xticks([])                            #去除坐标轴
+#~ ax.set_yticks([])
+#~ plt.savefig('./test2.JPEG',dpi = 210)
+
+
+
+

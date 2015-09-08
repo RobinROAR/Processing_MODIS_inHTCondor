@@ -1,9 +1,15 @@
 # -*- coding:utf-8 -*-
-#该模块定义了对modis文件的操作的各种方法，以及整个处理遥感数据需要的一些方法。
+
+###############################################################################
+#该模块定义了对modis文件的操作的各种方法
+#整个处理遥感数据需要的一些方法。
+###############################################################################
+
 import os
 import gdal
 import shutil
 import numpy as np
+import matplotlib.pyplot as plt
 from gdalconst import *
 
 #检查素材文件夹是否存在，不存在建立
@@ -95,6 +101,31 @@ def shpRepro(inshp,outshp):
 #从栅格图中裁剪
 # -crop_to_cutline  忽略矢量图外部分
 def mask(inshp,inraster,outraster):
-	os.system('gdalwarp -cutline %s  %s %s'% (inshp,inraster,outraster) )
+	os.system('gdalwarp -cutline %s %s %s -crop_to_cutline'% (inshp,inraster,outraster) )
 	
 	return 'warp ok. generate'+outraster	
+	
+	
+#生成缩略图
+def makeThumbnail(src):
+	ds = gdal.Open(src).ReadAsArray()
+	A = np.array(ds)
+	fig = plt.figure(frameon = False)    #生成画布
+	ax = fig.add_subplot(111)             #增加子图
+	ax.imshow(A, interpolation='nearest', cmap=plt.cm.gist_earth)    #子图上显示数据
+	plt.savefig(src.replace('.tif','THUMBNAIL.JPEG'),dpi = 80)
+	ax.set_xticks([])                            #去除坐标轴
+	ax.set_yticks([])
+	plt.savefig(src.replace('.tif','.JPEG'),dpi = 210)
+
+
+
+
+
+
+
+
+
+
+
+

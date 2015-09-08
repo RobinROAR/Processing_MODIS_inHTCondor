@@ -1,6 +1,17 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
+
+###############################################################################
+#主函数
+#完成了对批量modis文件的转换，拼接，重投影
+#根据矢量图裁剪的工作
+#输出文件夹    ./out
+#输入文件夹    ./data       ./shp
+#暂存文件夹    ./temp
+###############################################################################
+
+
 import os
 import gdal
 import shutil
@@ -8,9 +19,6 @@ import time
 import numpy as np
 from methods_on_modis import *
 from gdalconst import *
-#主函数，完成了对批量modis文件的转换，拼接，重投影，根据矢量图裁剪的工作
-
-
 
 #获取素材
 checkEnv(['data','shp','temp','out'])
@@ -55,6 +63,11 @@ for folder in result:
 		#清空temp文件夹
 		shutil.rmtree('temp')
 		os.mkdir('temp')
+		
+		#生成两张缩略图
+		if b == 0:
+			src = 'out/'+fname+'/'+fname+bname+'.tif'
+			makeThumbnail(src)
 		
 	et = time.time()	
 	print '已输出到文件夹：'+fname,
