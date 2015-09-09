@@ -9,6 +9,8 @@ import os
 import gdal
 import shutil
 import numpy as np
+import matplotlib as mpl
+mpl.use('Agg')
 import matplotlib.pyplot as plt
 from gdalconst import *
 
@@ -112,11 +114,11 @@ def makeThumbnail(src):
 	A = np.array(ds)
 	fig = plt.figure(frameon = False)    #生成画布
 	ax = fig.add_subplot(111)             #增加子图
-	ax.imshow(A, interpolation='nearest', cmap=plt.cm.gist_earth)    #子图上显示数据
+	ax.imshow(A, interpolation='nearest', vmin = 0,vmax = 16,cmap=plt.cm.gist_earth)    #子图上显示数据
 	plt.savefig(src.replace('.tif','THUMBNAIL.JPEG'),dpi = 80)
 	ax.set_xticks([])                            #去除坐标轴
 	ax.set_yticks([])
-	plt.savefig(src.replace('.tif','.JPEG'),dpi = 210)
+	plt.savefig(src.replace('.tif','.JPEG'),dpi = 300)
 
 
 
