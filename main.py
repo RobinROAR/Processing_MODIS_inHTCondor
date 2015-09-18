@@ -28,22 +28,22 @@ result = getRasters('data',['h26v05','h26v06','h25v05','h25v06'])
 temp = []
 #遍历不同数据文件夹
 for folder in result:
+	print '新作业开始',folder
 	st = time.time()
 	
 	for i in folder:
 		temp.append(getBandName(i))
 
 	bnum = len(temp[0][0])
-	#转换,b为波段
+	#转换,b为波段,bnum为波段总数
 	for b in range(bnum):
 		#由len(temp)个图合成
 		#字符串处理，生成文件名
 		a = str(temp[0][1][b]).split()
 		bname =a[1]
-
 		#生成文件夹名
-		a =  str(temp[0][0][b]).split('"')
-		fname = a[1][13:29]
+		a =  str(temp[0][0][b]).split('"')[1].split('/')[-1].split('.')
+		fname  = ''.join(a[:2])
 		#1. 转换
 		for i,j in zip(temp,range(1,len(temp)+1)):
 			transHDF(i[0][b],str(j)) 
@@ -68,7 +68,8 @@ for folder in result:
 		if b == 0:
 			src = 'out/'+fname+'/'+fname+bname+'.tif'
 			makeThumbnail(src)
-		
+	#清空文件夹名索引	
+	temp=[]
 	et = time.time()	
 	print '已输出到文件夹：'+fname,
 	print '该数据集耗时：'+ str(et-st)+'  s'

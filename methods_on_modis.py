@@ -71,12 +71,13 @@ def getBandName(path):
 	bandname=[]
 	for i in subdatasets:
 		#排除一个质量图层
-		if '[1x2400x2400]'in i[1]:
-			continue
+		#~ if '[1x2400x2400]'in i[1]:
+			#~ continue
 		pathname.append(i[0])
 		bandname.append(i[1])
 	
 	result = [pathname,bandname]
+	dataset = None
 	return result
 	
 #转换
@@ -87,6 +88,9 @@ def transHDF(infile,outfile):
 def merge(infiles,outfile):
 	str=''
 	for i in infiles:
+		#过滤xml文件
+		if 'xml' in i:
+			continue
 		str+=i+' '		
 	os.system('gdal_merge.py -o %s -of GTiff %s' %(outfile,str))
 
@@ -110,16 +114,25 @@ def mask(inshp,inraster,outraster):
 	
 #生成缩略图
 def makeThumbnail(src):
-	ds = gdal.Open(src).ReadAsArray()
+	dataset = gdal.Open(src)
+	#判断数据集的波段数
+	if(dataset.RasterCount<1):
+		return
+	if(dataset.RasterCount>1):
+		ds = dataset.GetRasterBand(1).ReadAsArray()
+	else:
+		ds = dataset.ReadAsArray()
+	
 	A = np.array(ds)
 	fig = plt.figure(frameon = False)    #生成画布
 	ax = fig.add_subplot(111)             #增加子图
 	ax.imshow(A, interpolation='nearest', vmin = 0,vmax = 16,cmap=plt.cm.gist_earth)    #子图上显示数据
-	plt.savefig(src.replace('.tif','THUMBNAIL.JPEG'),dpi = 80)
+	plt.savefig(src.replace('.tif','THUMBNAIL.png'),dpi = 80)
 	ax.set_xticks([])                            #去除坐标轴
 	ax.set_yticks([])
-	plt.savefig(src.replace('.tif','.JPEG'),dpi = 300)
-
+	plt.savefig(src.replace('.tif','.png'),dpi = 300)
+	ds = None
+	dataset = None
 
 
 
