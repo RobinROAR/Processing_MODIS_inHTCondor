@@ -81,8 +81,11 @@ def getBandName(path):
 	return result
 	
 #转换
+#转换
 def transHDF(infile,outfile):
-	    os.system('gdal_translate %s %s -of GTiff' %(infile,'temp/'+outfile))  
+                os.system('gdal_translate \'%s\' %s -of GTiff' %(infile,'temp/'+outfile))       
+# modified by neptune by add single quote to enclose infile to prevent error caused by space in infile
+
 
 #拼接
 def merge(infiles,outfile):
@@ -96,12 +99,12 @@ def merge(infiles,outfile):
 
 #更改投影
 def warp(infile,outfile):
-	os.system('gdalwarp %s %s -r near -t_srs EPSG:900913' % (infile,outfile))
+	os.system('gdalwarp %s %s -r near -t_srs EPSG:4326' % (infile,outfile))
 	return 'warp ok. generate'+outfile
 
 #矢量图重投影	
 def shpRepro(inshp,outshp):
-	os.system('ogr2ogr -t_srs EPSG:900913 %s %s' % (outshp, inshp))
+	os.system('ogr2ogr -t_srs EPSG:4326 %s %s' % (outshp, inshp))
 
 
 #从栅格图中裁剪

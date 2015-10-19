@@ -38,9 +38,14 @@ for folder in result:
 	#转换,b为波段,bnum为波段总数
 	for b in range(bnum):
 		#由len(temp)个图合成
-		#字符串处理，生成文件名
-		a = str(temp[0][1][b]).split()
-		bname =a[1]
+		 #字符串处理，生成文件名
+		# a = str(temp[0][1][b]).split() # commented by neptune;
+		# added by neptune;
+		a = str(temp[0][1][b])
+		bname = a[a.index(' ')+1:a.rindex('(')-1]
+		bname = bname.replace(' ', '_')
+		# end of add;
+		#bname =a[1] # commented by neptune;
 		#生成文件夹名
 		a =  str(temp[0][0][b]).split('"')[1].split('/')[-1].split('.')
 		fname  = ''.join(a[:2])
@@ -52,13 +57,12 @@ for folder in result:
 		#3. 投影
 		warp('temp/merge','temp/warp.tif')
 		#4.  根据矢量图裁剪
-		shpRepro('shp/qhubjxt.shp','temp/repro.shp')
-		
+		shpRepro('shp/qhlake_102113.shp','temp/repro.shp')
 		if(os.path.exists('out/'+fname)):
-			m=1
+				m=1
 		else:
-			os.mkdir('out/'+fname)
-		mask('temp/repro.shp','temp/warp.tif','out/'+fname+'/'+fname+bname+'.tif')
+				os.mkdir('out/'+fname)
+		mask('temp/repro.shp','temp/warp.tif','out/'+fname+'/'+fname+'_'+bname+'.tif')  # modified by neptune by add '_' between fname and bname
 		
 		#清空temp文件夹
 		shutil.rmtree('temp')
@@ -66,8 +70,9 @@ for folder in result:
 		
 		#生成两张缩略图
 		if b == 0:
-			src = 'out/'+fname+'/'+fname+bname+'.tif'
-			makeThumbnail(src)
+				src = 'out/'+fname+'/'+fname+'_'+bname+'.tif'   # modified by neptune by add '_' between fname and bname
+				makeThumbnail(src)
+
 	#清空文件夹名索引	
 	temp=[]
 	et = time.time()	
