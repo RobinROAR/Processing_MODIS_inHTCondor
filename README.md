@@ -4,7 +4,12 @@ We use this program to produce the dataset **MODIS remote sensing dataset for Qi
 
 
 Dataset: http://www.csdata.org/p/160/ .
-Publication: http://escj.cnic.cn/CN/article/downloadArticleFile.do?attachType=PDF&id=13140
+
+![](img1.png) 
+
+Paper:  A High Throughput Pipeline for Processing Time Series MODIS Data
+
+Link: http://escj.cnic.cn/CN/article/downloadArticleFile.do?attachType=PDF&id=13140
 
 
 
